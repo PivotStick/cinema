@@ -62,7 +62,7 @@
     on:keydown={handleKeyDown}
   />
   {#if search && focused}
-    <ul transition:scale>
+    <ul in:scale>
       {#each filtered as text, i}
         <li
           class:current={selection === i}

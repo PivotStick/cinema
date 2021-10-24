@@ -1,19 +1,21 @@
-import XLSX, { WorkBook } from "xlsx";
+import type { Datas } from "@stores";
 import type { Sheet } from "./Sheet";
+import XLSX, { WorkBook } from "xlsx";
 
 export class ResultMaker {
   wb: WorkBook;
 
-  constructor(public filename: string) {
+  constructor(public filename: string, public $datas: Datas) {
     this.wb = XLSX.utils.book_new();
     this.wb.Props = { CreatedDate: new Date() };
   }
 
-  setSheet<T>(sheet: Sheet<T>, items: T[]) {
-    sheet.items = items;
-
+  setSheet(sheet: Sheet) {
+    sheet.build(this.$datas);
     this.wb.SheetNames.push(sheet.name);
-    this.wb.Sheets[sheet.name] = XLSX.utils.aoa_to_sheet(sheet.rows);
+    this.wb.Sheets[sheet.name] = sheet.format(
+      XLSX.utils.aoa_to_sheet(sheet.rows)
+    );
   }
 
   s2ab(s: string) {

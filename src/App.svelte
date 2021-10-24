@@ -93,4 +93,14 @@
   a {
     color: inherit;
   }
+
+  *[contentediable] {
+    font: inherit;
+    border: none;
+    border: 1px dashed transparent;
+
+    &:hover {
+      border: 1px dashed #eee;
+    }
+  }
 </style>

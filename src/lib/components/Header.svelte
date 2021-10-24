@@ -1,49 +1,18 @@
 <script lang="ts">
   import { datas } from "@stores";
-  import { ResultMaker } from "../utils/ResultMaker";
-  import { led, movieAds, posters, remarks } from "../utils/sheets";
+  import { ResultMaker, Posters, MovieAds, LED, Remarks } from "../utils";
   import Input from "./Input.svelte";
 
   const generateAndDownload = () => {
     const result = new ResultMaker(
-      `cinema - ${new Date().toLocaleDateString()}`
+      `cinema - ${new Date().toLocaleDateString()}`,
+      $datas
     );
 
-    posters.setter = (poster) => [
-      [
-        $datas.week,
-        $datas.code,
-        $datas.city,
-        $datas.circuit,
-        $datas.name,
-        poster.title,
-        poster.location,
-        poster.format,
-      ],
-    ];
-
-    movieAds.setter = (group) =>
-      group.ads.map((ad, i) => [
-        $datas.week,
-        $datas.code,
-        $datas.city,
-        $datas.circuit,
-        $datas.name,
-        group.room,
-        group.film,
-        group.dimension,
-        ad.name,
-        ad.content,
-        i + 1,
-        group.duration,
-        group.date.split("-").reverse().join("/"),
-        group.time.replace(":", "H"),
-      ]);
-
-    result.setSheet(posters, $datas.posters);
-    result.setSheet(movieAds, $datas.movieAds);
-    result.setSheet(led, []);
-    result.setSheet(remarks, []);
+    result.setSheet(new Posters());
+    result.setSheet(new MovieAds());
+    result.setSheet(new LED());
+    result.setSheet(new Remarks());
 
     result.download();
   };

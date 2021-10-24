@@ -1,20 +1,14 @@
-export class Sheet<T> {
-  public rows: string[][] = [];
-  public setter: (item: T, index: number) => any[][] = () => [];
+import type { Datas } from "@stores";
+import type { WorkSheet } from "xlsx";
 
-  constructor(public name: string, columns: string[]) {
-    this.rows.push(columns);
-  }
+export class Sheet {
+  public rows: any[] = [];
 
-  set items(values: T[]) {
-    this.clear();
-    values.forEach((value, index) => {
-      const row = this.setter(value, index);
-      this.rows.push(...row);
-    });
-  }
+  constructor(public name: string) {}
 
-  clear() {
-    this.rows = this.rows.slice(0, 1);
+  build($datas: Datas) {}
+
+  format(ws: WorkSheet) {
+    return ws;
   }
 }
