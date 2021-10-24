@@ -66,7 +66,7 @@
           nofilter
         />
         <Input bind:value={group.duration} placeholder="Durée" type="number" />
-        <Input placeholder="Date" type="date" />
+        <Input bind:value={group.date} placeholder="Date" type="date" />
         <Input bind:value={group.time} placeholder="Horaire" type="time" />
         <button on:click={() => remove(group)}>✖︎</button>
       </div>
