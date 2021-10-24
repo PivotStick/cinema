@@ -88,7 +88,7 @@
     transition-property: border-color;
 
     &:focus-within {
-      border-color: var(--primary);
+      border-color: rgb(var(--primary));
     }
 
     input {

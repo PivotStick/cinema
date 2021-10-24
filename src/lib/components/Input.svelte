@@ -104,7 +104,7 @@
     }
 
     &:focus-within {
-      color: var(--primary);
+      color: rgb(var(--primary));
     }
   }
 

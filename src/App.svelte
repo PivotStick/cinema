@@ -29,7 +29,7 @@
     font-family: "Nunito", sans-serif;
     color: #333;
 
-    --primary: rgb(78, 169, 253);
+    --primary: 78, 169, 253;
   }
 
   #app {
