@@ -8,7 +8,8 @@
   let limit = 50;
 
   const add = () => {
-    $datas.dico.titles = [...$datas.dico.titles, query];
+    $datas.dico.titles = [query, ...$datas.dico.titles];
+    query = "";
   };
 
   const remove = (title) => {
