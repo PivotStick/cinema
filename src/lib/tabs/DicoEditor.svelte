@@ -1,6 +1,7 @@
 <script>
   import { datas } from "@stores";
   import { scale } from "svelte/transition";
+  import Dico from "../components/Dico.svelte";
   import Input from "../components/Input.svelte";
 
   let query = "";
@@ -20,9 +21,20 @@
     .slice(0, limit);
 </script>
 
-<p class="info">Cliquez sur les titres puis modifiez les...</p>
-<p>{results.length} / {$datas.dico.titles.length} résultats</p>
-<Input type="search" placeholder="Rechercher..." bind:value={query} />
+<div class="dico">
+  <Dico />
+</div>
+{#if $datas.dico.titles.length}
+  <p class="info">Cliquez sur les titres puis modifiez les...</p>
+  <p>{results.length} / {$datas.dico.titles.length} résultats</p>
+{:else}
+  <p>Votre Dico est vide...</p>
+{/if}
+<Input
+  type="search"
+  placeholder="Rechercher ou Ajouter..."
+  bind:value={query}
+/>
 
 {#if query}
   <button class="add" transition:scale on:click={add}>
@@ -48,6 +60,7 @@
     margin-top: 1em;
   }
 
+  .dico,
   p {
     margin-bottom: 1em;
   }

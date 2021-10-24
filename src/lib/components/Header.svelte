@@ -2,7 +2,6 @@
   import { datas } from "@stores";
   import { ResultMaker } from "../utils/ResultMaker";
   import { led, movieAds, posters, remarks } from "../utils/sheets";
-  import Dico from "./Dico.svelte";
   import Input from "./Input.svelte";
 
   const generateAndDownload = () => {
@@ -57,9 +56,6 @@
   <Input bind:value={$datas.city} placeholder="Ville" />
   <Input bind:value={$datas.circuit} placeholder="Circuit" />
   <Input bind:value={$datas.name} placeholder="Complexe" />
-  <div class="dico">
-    <Dico />
-  </div>
 </header>
 
 <style lang="scss">
@@ -71,7 +67,6 @@
     grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
   }
 
-  .dico,
   .download {
     grid-column: 1 / -1;
   }
