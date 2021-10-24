@@ -83,8 +83,6 @@
 </label>
 
 <style lang="scss">
-  $focus: rgb(78, 169, 253);
-
   label {
     cursor: text;
     position: relative;
@@ -106,7 +104,7 @@
     }
 
     &:focus-within {
-      color: $focus;
+      color: var(--primary);
     }
   }
 
@@ -133,7 +131,7 @@
 
     &.current,
     &:hover {
-      background-color: rgba($focus, 0.1);
+      background-color: rgba(var(--primary), 0.1);
     }
 
     &.placeholder {

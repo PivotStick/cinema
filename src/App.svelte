@@ -7,6 +7,7 @@
   import MovieAds from "@tabs/MovieAds.svelte";
   import LED from "@tabs/LED.svelte";
   import Remarks from "@tabs/Remarks.svelte";
+  import DicoEditor from "@tabs/DicoEditor.svelte";
 
   import { datas } from "@stores";
 </script>
@@ -18,6 +19,7 @@
   <Tab name="Films Annonce"><MovieAds /></Tab>
   <Tab name="LED"><LED /></Tab>
   <Tab name="Remarques"><Remarks /></Tab>
+  <Tab name="Edition du Dico"><DicoEditor /></Tab>
 </Tabs>
 
 <style global lang="scss">
@@ -26,6 +28,8 @@
   :root {
     font-family: "Nunito", sans-serif;
     color: #333;
+
+    --primary: rgb(78, 169, 253);
   }
 
   #app {

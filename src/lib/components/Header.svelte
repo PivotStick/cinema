@@ -6,7 +6,9 @@
   import Input from "./Input.svelte";
 
   const generateAndDownload = () => {
-    const result = new ResultMaker(`cinema - ${$datas.date}`);
+    const result = new ResultMaker(
+      `cinema - ${new Date().toLocaleDateString()}`
+    );
 
     posters.setter = (poster) => [
       [
@@ -35,7 +37,7 @@
         ad.content,
         i + 1,
         group.duration,
-        $datas.date.split("-").reverse().join("/"),
+        group.date.split("-").reverse().join("/"),
         group.time.replace(":", "H"),
       ]);
 
@@ -49,10 +51,9 @@
 </script>
 
 <header>
-  <button on:click={generateAndDownload}>Télécharger</button>
+  <button class="download" on:click={generateAndDownload}>Télécharger</button>
   <Input type="number" bind:value={$datas.code} placeholder="Code Enquêteur" />
   <Input type="number" bind:value={$datas.week} placeholder="Semaine" />
-  <Input type="date" bind:value={$datas.date} placeholder="Date" />
   <Input bind:value={$datas.city} placeholder="Ville" />
   <Input bind:value={$datas.circuit} placeholder="Circuit" />
   <Input bind:value={$datas.name} placeholder="Complexe" />
@@ -61,17 +62,17 @@
   </div>
 </header>
 
-<style>
+<style lang="scss">
   header {
     padding: 1em;
     display: grid;
     gap: 1em;
 
-    grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
   }
 
   .dico,
-  button {
+  .download {
     grid-column: 1 / -1;
   }
 </style>

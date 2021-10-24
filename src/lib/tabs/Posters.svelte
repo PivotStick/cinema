@@ -1,19 +1,18 @@
 <script>
   import { slide } from "svelte/transition";
   import { datas } from "@stores";
+  import { v4 } from "uuid";
   import Input from "../components/Input.svelte";
   import FilmTitle from "../components/FilmTitle.svelte";
 
   let locations = ["INT HALL", "INT COUL"];
   let formats = ["120x160", "PLV CLASSIQUE", "PLV SPECIALE"];
 
-  let uuid = $datas.posters.length;
-
   const add = () => {
     $datas.posters = [
       ...$datas.posters,
       {
-        _id: uuid++,
+        _id: v4(),
         title: "",
         location: locations[0],
         format: formats[0],
@@ -52,6 +51,7 @@
       >
     </li>
   {/each}
+  <button on:click={add}>Ajouter une affiche</button>
 </ul>
 
 <style lang="scss">

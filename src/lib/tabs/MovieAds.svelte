@@ -8,13 +8,17 @@
   const contents = ["PUB", "JINGLE", "FA", "FA PUB", "PUB NOIR"];
 
   const add = () => {
+    const last = $datas.movieAds[$datas.movieAds.length - 1];
     $datas.movieAds = [
       ...$datas.movieAds,
       {
         room: 0,
         film: "",
         dimension: dimensions[0],
-        time: $datas.movieAds[$datas.movieAds.length - 1]?.time || "07:00",
+        date:
+          last?.date ||
+          new Date().toLocaleDateString().split("/").reverse().join("-"),
+        time: last?.time || "07:00",
         duration: 10,
         ads: [],
       },
@@ -62,6 +66,7 @@
           nofilter
         />
         <Input bind:value={group.duration} placeholder="Durée" type="number" />
+        <Input placeholder="Date" type="date" />
         <Input bind:value={group.time} placeholder="Horaire" type="time" />
         <button on:click={() => remove(group)}>✖︎</button>
       </div>
@@ -75,6 +80,7 @@
               placeholder="Contenu"
               type="search"
               search={contents}
+              nofilter
               on:next={() =>
                 adIndex === group.ads.length - 1 && addAd(groupIndex)}
             />
@@ -103,7 +109,7 @@
   .movies {
     gap: 2.5vw;
 
-    li {
+    & > li {
       border: 1px solid #ddd;
       border-radius: 1em;
       padding: 1em;
@@ -114,7 +120,7 @@
         gap: 1em;
 
         & > :global(*:nth-child(2)) {
-          flex: 1 0 25em;
+          flex: 1 0 20em;
         }
       }
     }

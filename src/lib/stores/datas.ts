@@ -22,7 +22,6 @@ export const datas = makeDatas("datas", {
   city: "MONTPELLIER",
   circuit: "CGR",
   name: "MEGA CGR LATTES",
-  date: new Date().toLocaleDateString().split("/").reverse().join("-"),
 
   dico: {
     titles: [],
