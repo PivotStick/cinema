@@ -20,6 +20,8 @@
   $: results = $datas.dico.titles
     .filter((title) => new RegExp(query, "gi").test(title))
     .slice(0, limit);
+
+  $: query = query.toUpperCase();
 </script>
 
 <div class="dico">

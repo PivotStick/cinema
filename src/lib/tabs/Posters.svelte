@@ -9,13 +9,14 @@
   let formats = ["120x160", "PLV CLASSIQUE", "PLV SPECIALE"];
 
   const add = () => {
+    let last = $datas.posters[$datas.posters.length - 1];
     $datas.posters = [
       ...$datas.posters,
       {
         _id: v4(),
         title: "",
-        location: locations[0],
-        format: formats[0],
+        location: last?.location || locations[0],
+        format: last?.format || formats[0],
       },
     ];
   };

@@ -13,6 +13,8 @@
   const click = (e) => {
     e.target.click();
   };
+
+  $: value = value.toUpperCase();
 </script>
 
 <Input bind:value type="search" {placeholder} search={$datas.dico.titles}>

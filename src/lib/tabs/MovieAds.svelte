@@ -9,10 +9,13 @@
 
   const add = () => {
     const last = $datas.movieAds[$datas.movieAds.length - 1];
+    if (last) last.expanded = false;
+
     $datas.movieAds = [
       ...$datas.movieAds,
       {
         room: 0,
+        expanded: true,
         film: "",
         dimension: dimensions[0],
         date:
@@ -23,7 +26,7 @@
         ads: [],
       },
     ];
-    addAd();
+    for (let i = 0; i < 40; i++) addAd();
   };
 
   const remove = (movieAd: MovieAd) => {
@@ -69,31 +72,40 @@
         <Input bind:value={group.date} placeholder="Date" type="date" />
         <Input bind:value={group.time} placeholder="Horaire" type="time" />
         <button on:click={() => remove(group)}>✖︎</button>
+        <p
+          class="expand-btn"
+          class:expanded={group.expanded}
+          on:click={() => (group.expanded = !group.expanded)}
+        >
+          ⌃
+        </p>
       </div>
-      <ul class="ads">
-        {#each group.ads as ad, adIndex}
-          <li>
-            <p>{adIndex + 1}</p>
-            <FilmTitle bind:value={ad.name} placeholder="Avant Séance" />
-            <Input
-              bind:value={ad.content}
-              placeholder="Contenu"
-              type="search"
-              search={contents}
-              nofilter
-              on:next={() =>
-                adIndex === group.ads.length - 1 && addAd(groupIndex)}
-            />
-            <button tabindex="-1" on:click={() => removeAd(groupIndex, ad)}
-              >✖︎</button
+      {#if group.expanded}
+        <ul class="ads">
+          {#each group.ads as ad, adIndex}
+            <li>
+              <p>{adIndex + 1}</p>
+              <FilmTitle bind:value={ad.name} placeholder="Avant Séance" />
+              <Input
+                bind:value={ad.content}
+                placeholder="Contenu"
+                type="search"
+                search={contents}
+                nofilter
+                on:next={() =>
+                  adIndex === group.ads.length - 1 && addAd(groupIndex)}
+              />
+              <button tabindex="-1" on:click={() => removeAd(groupIndex, ad)}
+                >✖︎</button
+              >
+            </li>
+          {/each}
+          <li class="add">
+            <button on:click={() => addAd(groupIndex)}>Ajouter une ligne</button
             >
           </li>
-        {:else}
-          <li class="add">
-            <button on:click={() => addAd(groupIndex)}>Ajouter</button>
-          </li>
-        {/each}
-      </ul>
+        </ul>
+      {/if}
     </li>
   {/each}
   <li class="add"><button on:click={add}>Ajouter un Horaire</button></li>
@@ -104,6 +116,19 @@
   .ads {
     display: flex;
     flex-direction: column;
+  }
+
+  .expand-btn {
+    cursor: pointer;
+    font-size: 2em;
+    font-weight: 900;
+    width: max-content;
+
+    transition-property: transform;
+
+    &.expanded {
+      transform: rotate(180deg);
+    }
   }
 
   .movies {
@@ -118,6 +143,10 @@
         display: flex;
         flex-wrap: wrap;
         gap: 1em;
+
+        & > :global(*:first-child) {
+          width: 6em;
+        }
 
         & > :global(*:nth-child(2)) {
           flex: 1 0 20em;
