@@ -5,7 +5,7 @@
   import Input from "../components/Input.svelte";
 
   const dimensions = ["2D", "3D"];
-  const contents = ["PUB", "JINGLE", "FA", "FA PUB", "PUB NOIR"];
+  const contents = ["PUB", "JINGLE", "FA", "FA PUB", "PUB NOIR", "FA NOIR"];
 
   const add = () => {
     const last = $datas.movieAds[$datas.movieAds.length - 1];
