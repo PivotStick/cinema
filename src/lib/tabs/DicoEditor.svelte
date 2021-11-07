@@ -85,7 +85,7 @@
 
   li {
     display: flex;
-    border: 1px solid #eee;
+    border: 1px solid var(--secondary);
     border-radius: 1em;
     transition-property: border-color;
 

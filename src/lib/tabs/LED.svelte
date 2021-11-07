@@ -109,7 +109,7 @@
   }
 
   .led:not(:first-child) {
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--secondary);
     margin-top: 2em;
     padding-top: 1.5em;
   }

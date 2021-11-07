@@ -30,6 +30,7 @@
     color: #333;
 
     --primary: 78, 169, 253;
+    --secondary: #eee;
   }
 
   #app {
@@ -57,7 +58,7 @@
   button {
     cursor: pointer;
 
-    background-color: #eee;
+    background-color: var(--secondary);
     border: none;
     border-radius: 1em;
     padding: 1em;
@@ -100,7 +101,7 @@
     border: 1px dashed transparent;
 
     &:hover {
-      border: 1px dashed #eee;
+      border: 1px dashed var(--secondary);
     }
   }
 </style>

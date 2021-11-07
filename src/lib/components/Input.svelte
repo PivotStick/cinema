@@ -15,7 +15,7 @@
   let selection = -1;
 
   const regex = (v: string | number) => {
-    v = `^${v}`;
+    v = `${v}`;
     v = v.replace(/[()/]/g, "\\$&");
     return new RegExp(v, "gi");
   };
@@ -91,7 +91,7 @@
     border-radius: 1em;
     margin-top: 0.5em;
     font-weight: 700;
-    color: #ddd;
+    color: #aaa;
 
     transition-property: color;
 

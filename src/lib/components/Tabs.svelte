@@ -80,7 +80,7 @@
     }
 
     &:hover {
-      background-color: #eee;
+      background-color: var(--secondary);
       color: #666;
       span {
         transform: scale(1.2);
