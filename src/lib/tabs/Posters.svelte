@@ -1,5 +1,4 @@
 <script>
-  import { slide } from "svelte/transition";
   import { datas } from "@stores";
   import { v4 } from "uuid";
   import Input from "../components/Input.svelte";
@@ -8,51 +7,73 @@
   let locations = ["INT HALL", "INT COUL"];
   let formats = ["120x160", "PLV CLASSIQUE", "PLV SPECIALE"];
 
+  let poster = {
+    title: "",
+    format: formats[0],
+    location: locations[0],
+  };
+
   const add = () => {
-    let last = $datas.posters[$datas.posters.length - 1];
     $datas.posters = [
       ...$datas.posters,
       {
         _id: v4(),
-        title: "",
-        location: last?.location || locations[0],
-        format: last?.format || formats[0],
+        ...poster,
       },
     ];
+    poster.title = "";
   };
 
   const remove = (poster) => {
     $datas.posters = $datas.posters.filter((p) => p !== poster);
   };
 
-  if (!$datas.posters.length) add();
+  const reset = () => {
+    $datas.posters = [];
+  };
 </script>
 
 <ul>
-  {#each $datas.posters as poster, i (poster._id)}
-    <li out:slide|local>
-      <FilmTitle bind:value={poster.title} />
+  {#each $datas.posters as p, i (p._id)}
+    <li>
+      <FilmTitle bind:value={p.title} />
       <Input
-        bind:value={poster.location}
+        bind:value={p.location}
         type="search"
         placeholder="Positionnement"
         search={locations}
         nofilter
       />
       <Input
-        bind:value={poster.format}
+        bind:value={p.format}
         on:next={i === $datas.posters.length - 1 && add}
         type="search"
         placeholder="Format"
         search={formats}
         nofilter
       />
-      <button tabindex="-1" disabled={!i} on:click={() => remove(poster)}
-        >✖︎</button
-      >
+      <button tabindex="-1" on:click={() => remove(p)}>✖︎</button>
     </li>
   {/each}
-  <button on:click={add}>Ajouter une affiche</button>
+  <form on:submit|preventDefault={add}>
+    <FilmTitle bind:value={poster.title} noBlur />
+    <Input
+      bind:value={poster.location}
+      type="search"
+      placeholder="Positionnement"
+      search={locations}
+      nofilter
+    />
+    <Input
+      bind:value={poster.format}
+      type="search"
+      placeholder="Format"
+      search={formats}
+      nofilter
+    />
+    <button type="submit">Ajouter</button>
+  </form>
+  <button on:click={reset}>Réinitialiser</button>
 </ul>
 
 <style lang="scss">
@@ -64,6 +85,7 @@
     padding-bottom: 25vh;
   }
 
+  form,
   li {
     display: flex;
     gap: 1em;
@@ -80,5 +102,11 @@
       flex: 0 0 auto;
       align-self: center;
     }
+  }
+
+  form {
+    border-top: 1px solid #aaa;
+    margin-top: 2.5em;
+    padding-top: 1.5em;
   }
 </style>

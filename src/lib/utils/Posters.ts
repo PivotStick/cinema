@@ -3,6 +3,8 @@ import type { WorkSheet } from "xlsx";
 import { Sheet } from "./Sheet";
 
 export class Posters extends Sheet {
+  wchs = [];
+
   constructor() {
     super("AFFICHES");
     this.rows.push([
@@ -17,31 +19,30 @@ export class Posters extends Sheet {
     ]);
   }
 
+  setHighestWidth(index, value) {
+    const count = `${value}`.length;
+    this.wchs[index] =
+      (this.wchs[index] || 0) < count ? count : this.wchs[index];
+
+    return value;
+  }
+
   build($datas: Datas) {
     const posters = $datas.posters.map((poster) => [
-      $datas.week,
-      $datas.code,
-      $datas.city,
-      $datas.circuit,
-      $datas.name,
-      poster.title,
-      poster.location,
-      poster.format,
+      this.setHighestWidth(0, $datas.week),
+      this.setHighestWidth(1, $datas.code),
+      this.setHighestWidth(2, $datas.city),
+      this.setHighestWidth(3, $datas.circuit),
+      this.setHighestWidth(4, $datas.name),
+      this.setHighestWidth(5, poster.title),
+      this.setHighestWidth(6, poster.location),
+      this.setHighestWidth(7, poster.format),
     ]);
     this.rows.push(...posters);
   }
 
   format(ws: WorkSheet) {
-    ws["!cols"] = [
-      { width: 10 },
-      { width: 10 },
-      { width: 14 },
-      { width: 16 },
-      { width: 25 },
-      { width: 17 },
-      { width: 17 },
-      { width: 13 },
-    ];
+    ws["!cols"] = this.wchs.map((wch) => ({ wch }));
 
     return ws;
   }

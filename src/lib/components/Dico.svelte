@@ -1,5 +1,6 @@
 <script>
   import { datas } from "@stores";
+  import { v4 } from "uuid";
   import XLSX from "xlsx";
 
   let files;
@@ -19,7 +20,9 @@
         return a;
       }, []);
 
-    $datas.dico.titles = titles.slice(1);
+    $datas.dico.titles = titles
+      .slice(1)
+      .map((name) => ({ _id: v4(), name: name.toString(), type: "PUB" }));
   };
 
   $: {

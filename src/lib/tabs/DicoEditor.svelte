@@ -1,24 +1,36 @@
 <script>
   import { datas } from "@stores";
   import { scale } from "svelte/transition";
+  import { v4 } from "uuid";
   import Dico from "../components/Dico.svelte";
+  import Ad from "../components/Ad.svelte";
   import Input from "../components/Input.svelte";
 
   let query = "";
+  let type = "PUB";
   let limit = 50;
 
   const add = () => {
-    $datas.dico.titles = [query, ...$datas.dico.titles];
+    $datas.dico.titles = [
+      {
+        _id: v4(),
+        name: query,
+        type,
+      },
+      ...$datas.dico.titles,
+    ];
     query = "";
   };
 
-  const remove = (title) => {
-    $datas.dico.titles = $datas.dico.titles.filter((t) => t !== title);
+  const remove = (_id) => {
+    $datas.dico.titles = $datas.dico.titles.filter((t) => t._id !== _id);
     query = "";
   };
+
+  const upper = (e) => (e.target.value = e.target.value.toUpperCase());
 
   $: results = $datas.dico.titles
-    .filter((title) => new RegExp(query, "gi").test(title))
+    .filter((title) => new RegExp(query, "gi").test(title.name))
     .slice(0, limit);
 
   $: query = query.toUpperCase();
@@ -39,23 +51,31 @@
   bind:value={query}
 />
 
-{#if query}
+{#if !results.length && query}
   <button class="add" transition:scale on:click={add}>
     Ajouter "{query}" au dico
   </button>
 {/if}
 
 <ul>
-  {#each results as title}
+  {#each results as title (title._id)}
     <li>
       <input
         type="text"
-        bind:value={$datas.dico.titles[$datas.dico.titles.indexOf(title)]}
+        on:input={upper}
+        bind:value={$datas.dico.titles[$datas.dico.titles.indexOf(title)].name}
       />
-      <button on:click={() => remove(title)}>✖︎</button>
+      <input
+        type="text"
+        on:input={upper}
+        bind:value={$datas.dico.titles[$datas.dico.titles.indexOf(title)].type}
+      />
+      <button on:click={() => remove(title._id)}>✖︎</button>
     </li>
   {/each}
 </ul>
+
+<button style="width: 100%" on:click={datas.reset}>tout réinitialiser</button>
 
 <style lang="scss">
   ul,
@@ -100,6 +120,10 @@
       border: none;
       font: inherit;
       outline: none;
+
+      &:last-of-type {
+        width: 25%;
+      }
     }
 
     button {

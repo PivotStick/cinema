@@ -1,8 +1,12 @@
 <script>
-  import { datas } from "@stores";
+  import { datas, initialLeds } from "@stores";
   import { slide } from "svelte/transition";
   import FilmTitle from "../components/FilmTitle.svelte";
   import Input from "../components/Input.svelte";
+
+  const reset = () => {
+    $datas.leds = JSON.parse(JSON.stringify(initialLeds));
+  };
 </script>
 
 <ul>
@@ -65,7 +69,14 @@
   {/each}
 </ul>
 
+<button class="reset" on:click={reset}>Réinitialiser</button>
+
 <style lang="scss">
+  .reset {
+    margin-top: 6em;
+    width: 100%;
+  }
+
   h1 {
     margin: 0;
   }

@@ -34,7 +34,7 @@ export class MovieAds extends Sheet {
         group.film,
         group.dimension,
         ad.name,
-        ad.content,
+        ad.type,
         i + 1,
         group.duration,
         group.date.split("-").reverse().join("/"),

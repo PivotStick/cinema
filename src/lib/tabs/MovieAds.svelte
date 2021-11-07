@@ -1,8 +1,11 @@
 <script lang="ts">
-  import { datas } from "@stores";
   import type { MovieAd } from "src/@types/MovieAd";
+  import { slide } from "svelte/transition";
+  import { v4 } from "uuid";
+  import { datas } from "@stores";
   import FilmTitle from "../components/FilmTitle.svelte";
   import Input from "../components/Input.svelte";
+  import Ad from "../components/Ad.svelte";
 
   const dimensions = ["2D", "3D"];
   const contents = ["PUB", "JINGLE", "FA", "FA PUB", "PUB NOIR", "FA NOIR"];
@@ -14,32 +17,28 @@
     $datas.movieAds = [
       ...$datas.movieAds,
       {
-        room: 0,
+        room: 1,
         expanded: true,
         film: "",
         dimension: dimensions[0],
         date:
           last?.date ||
           new Date().toLocaleDateString().split("/").reverse().join("-"),
-        time: last?.time || "07:00",
-        duration: 10,
+        time: last?.time || "14:00",
+        duration: 20,
         ads: [],
       },
     ];
-    for (let i = 0; i < 40; i++) addAd();
   };
 
   const remove = (movieAd: MovieAd) => {
     $datas.movieAds = $datas.movieAds.filter((m) => m !== movieAd);
   };
 
-  const addAd = (index: number = $datas.movieAds.length - 1) => {
+  const addAd = (index: number = $datas.movieAds.length - 1, ad) => {
     $datas.movieAds[index].ads = [
       ...$datas.movieAds[index].ads,
-      {
-        content: contents[0],
-        name: "",
-      },
+      { _id: v4(), ...ad },
     ];
   };
 
@@ -50,6 +49,10 @@
   };
 
   if (!$datas.movieAds.length) add();
+
+  const reset = () => {
+    $datas.movieAds = [];
+  };
 </script>
 
 <ul class="movies">
@@ -60,18 +63,39 @@
           bind:value={group.room}
           placeholder="N° de Salle"
           type="number"
+          tabindex="1"
         />
-        <FilmTitle bind:value={group.film} placeholder="Séance / Film" />
+        <FilmTitle
+          bind:value={group.film}
+          placeholder="Séance / Film"
+          tabindex="1"
+        />
         <Input
           bind:value={group.dimension}
           placeholder="2D / 3D"
           search={dimensions}
           nofilter
+          tabindex="1"
         />
-        <Input bind:value={group.duration} placeholder="Durée" type="number" />
-        <Input bind:value={group.date} placeholder="Date" type="date" />
-        <Input bind:value={group.time} placeholder="Horaire" type="time" />
-        <button on:click={() => remove(group)}>✖︎</button>
+        <Input
+          bind:value={group.duration}
+          placeholder="Durée"
+          type="number"
+          tabindex="1"
+        />
+        <Input
+          bind:value={group.date}
+          placeholder="Date"
+          type="date"
+          tabindex="1"
+        />
+        <Input
+          bind:value={group.time}
+          placeholder="Horaire"
+          type="time"
+          tabindex="1"
+        />
+        <button on:click={() => remove(group)} tabindex="-1">✖︎</button>
         <p
           class="expand-btn"
           class:expanded={group.expanded}
@@ -83,32 +107,52 @@
       {#if group.expanded}
         <ul class="ads">
           {#each group.ads as ad, adIndex}
-            <li>
+            <li transition:slide|local>
               <p>{adIndex + 1}</p>
               <FilmTitle bind:value={ad.name} placeholder="Avant Séance" />
               <Input
-                bind:value={ad.content}
+                bind:value={ad.type}
                 placeholder="Contenu"
                 type="search"
                 search={contents}
                 nofilter
-                on:next={() =>
-                  adIndex === group.ads.length - 1 && addAd(groupIndex)}
               />
               <button tabindex="-1" on:click={() => removeAd(groupIndex, ad)}
                 >✖︎</button
               >
             </li>
           {/each}
-          <li class="add">
-            <button on:click={() => addAd(groupIndex)}>Ajouter une ligne</button
-            >
-          </li>
+          <Ad on:submit={(e) => addAd(groupIndex, e.detail)} />
+          <!-- <form class="add" on:submit|preventDefault={() => addAd()}>
+            <FilmTitle bind:value={ad.name} noBlur />
+            <Input
+              bind:value={ad.type}
+              placeholder="Contenu"
+              type="search"
+              search={contents}
+              nofilter
+            />
+            <button type="submit">+</button>
+          </form> -->
+          <!-- <ul class="groups">
+            <li>
+              <FilmTitle bind:value={ad.name} noBlur />
+              <Input
+                bind:value={ad.type}
+                placeholder="Contenu"
+                type="search"
+                search={contents}
+                nofilter
+              />
+            </li>
+            <button>Créer un groupe</button>
+          </ul> -->
         </ul>
       {/if}
     </li>
   {/each}
   <li class="add"><button on:click={add}>Ajouter un Horaire</button></li>
+  <button on:click={reset}>Réinitialiser</button>
 </ul>
 
 <style lang="scss">
@@ -124,10 +168,11 @@
     font-weight: 900;
     width: max-content;
 
+    transform: translateY(-40%) rotateX(var(--rotate));
     transition-property: transform;
 
     &.expanded {
-      transform: rotate(180deg);
+      --rotate: 180deg;
     }
   }
 
@@ -135,9 +180,8 @@
     gap: 2.5vw;
 
     & > li {
-      border: 1px solid #ddd;
-      border-radius: 1em;
-      padding: 1em;
+      padding-bottom: 2.5vw;
+      border-bottom: 1px solid #ddd;
 
       & > div {
         display: flex;
@@ -172,11 +216,18 @@
         font-weight: 900;
         font-size: 2em;
         transform: translateY(10%);
+        width: 2ch;
       }
     }
   }
 
-  .add button {
-    width: 100%;
+  .add {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+
+    :global(:first-child) {
+      flex: 1;
+    }
   }
 </style>

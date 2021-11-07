@@ -6,6 +6,7 @@
 
   export let value: string | number = "";
   export let placeholder = "";
+  export let noBlur = false;
 
   export let search: string[] = null;
   export let nofilter = false;
@@ -33,9 +34,10 @@
       case "Tab":
         if (!e.shiftKey) dispatch("next");
       case "Enter":
+        dispatch("enter");
         if (!filtered) break;
         value = filtered[selection] || value;
-        input.blur();
+        if (!noBlur) input.blur();
         break;
 
       case "ArrowDown":
@@ -50,7 +52,7 @@
 
 <label class={$$restProps.type} class:--empty={!value.toString().trim()}>
   {#if placeholder}
-    <p>{placeholder}</p>
+    <p tabindex="-1">{placeholder}</p>
   {/if}
   <input
     bind:this={input}
@@ -62,7 +64,7 @@
     on:keydown={handleKeyDown}
   />
   {#if search && focused}
-    <ul in:scale>
+    <ul in:scale|local>
       {#each filtered as text, i}
         <li
           class:current={selection === i}
@@ -88,7 +90,7 @@
     position: relative;
     display: block;
     border: 1px solid currentColor;
-    border-radius: 1em;
+    border-radius: 1.5em;
     margin-top: 0.5em;
     font-weight: 700;
     color: #aaa;
@@ -143,6 +145,7 @@
   p {
     position: absolute;
     color: currentColor;
+    pointer-events: none;
 
     top: 50%;
     left: 0.75em;

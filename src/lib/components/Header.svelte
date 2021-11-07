@@ -19,12 +19,24 @@
 </script>
 
 <header>
-  <button class="download" on:click={generateAndDownload}>Télécharger</button>
-  <Input type="number" bind:value={$datas.code} placeholder="Code Enquêteur" />
-  <Input type="number" bind:value={$datas.week} placeholder="Semaine" />
-  <Input bind:value={$datas.city} placeholder="Ville" />
-  <Input bind:value={$datas.circuit} placeholder="Circuit" />
-  <Input bind:value={$datas.name} placeholder="Complexe" />
+  <button class="download" on:click={generateAndDownload} tabindex="-1"
+    >Télécharger</button
+  >
+  <Input
+    type="number"
+    bind:value={$datas.code}
+    placeholder="Code Enquêteur"
+    tabindex="-1"
+  />
+  <Input
+    type="number"
+    bind:value={$datas.week}
+    placeholder="Semaine"
+    tabindex="-1"
+  />
+  <Input bind:value={$datas.city} placeholder="Ville" tabindex="-1" />
+  <Input bind:value={$datas.circuit} placeholder="Circuit" tabindex="-1" />
+  <Input bind:value={$datas.name} placeholder="Complexe" tabindex="-1" />
 </header>
 
 <style lang="scss">

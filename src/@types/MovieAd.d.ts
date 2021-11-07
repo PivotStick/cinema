@@ -1,3 +1,5 @@
+import type { Ad } from "./Ad";
+
 export type MovieAd = {
   room: number;
   expanded: boolean;
@@ -6,8 +8,7 @@ export type MovieAd = {
   date: string;
   time: string;
   duration: number;
-  ads: {
-    content: typeof contents[number];
-    name: string;
-  }[];
+  ads: (Ad & {
+    suffix?: string;
+  })[];
 };
