@@ -10,5 +10,6 @@ export type MovieAd = {
   duration: number;
   ads: (Ad & {
     suffix?: string;
+    color?: string;
   })[];
 };

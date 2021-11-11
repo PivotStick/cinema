@@ -75,7 +75,9 @@
   {/each}
 </ul>
 
-<button style="width: 100%" on:click={datas.reset}>tout réinitialiser</button>
+<button style="width: 100%; margin-top: 1em;" on:click={datas.reset}
+  >tout réinitialiser</button
+>
 
 <style lang="scss">
   ul,
@@ -105,12 +107,13 @@
 
   li {
     display: flex;
-    border: 1px solid var(--secondary);
+    border: 1px solid currentColor;
     border-radius: 1em;
-    transition-property: border-color;
+    transition-property: color;
+    color: #aaa;
 
     &:focus-within {
-      border-color: rgb(var(--primary));
+      color: rgb(var(--primary));
     }
 
     input {
@@ -119,6 +122,7 @@
       width: 100%;
       border: none;
       font: inherit;
+      color: inherit;
       outline: none;
 
       &:last-of-type {
