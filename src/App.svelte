@@ -30,7 +30,7 @@
     color: #333;
 
     --primary: 78, 169, 253;
-    --secondary: #eee;
+    --secondary: rgba(0, 0, 0, 0.05);
   }
 
   #app {

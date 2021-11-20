@@ -29,6 +29,11 @@
 
   const upper = (e) => (e.target.value = e.target.value.toUpperCase());
 
+  const setGroup = (_id, value) => {
+    const index = $datas.dico.titles.findIndex((t) => t._id === _id);
+    if (index >= 0) $datas.dico.titles[index].group = value;
+  };
+
   $: results = $datas.dico.titles
     .filter((title) => new RegExp(query, "gi").test(title.name))
     .slice(0, limit);
@@ -97,7 +102,7 @@
 
   ul {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20em, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(25em, 1fr));
     gap: 1em;
   }
 
@@ -106,6 +111,7 @@
   }
 
   li {
+    position: relative;
     display: flex;
     border: 1px solid currentColor;
     border-radius: 1em;
@@ -114,6 +120,10 @@
 
     &:focus-within {
       color: rgb(var(--primary));
+
+      .group {
+        display: flex;
+      }
     }
 
     input {
@@ -133,6 +143,57 @@
     button {
       margin: 0.5em;
       margin-left: 0;
+    }
+  }
+
+  .group {
+    overflow: hidden;
+    position: absolute;
+    display: none;
+
+    right: 1em;
+    bottom: 100%;
+    background-color: white;
+    border: 1px solid currentColor;
+    border-radius: 0.5em 0.5em 0 0;
+
+    .toggle {
+      cursor: pointer;
+      display: flex;
+      padding: 0.5em 1em;
+      justify-content: center;
+      align-items: center;
+
+      transition-property: background-color;
+
+      &:hover {
+        background-color: rgba(var(--primary), 0.15);
+      }
+    }
+
+    & > input {
+      flex: 1;
+    }
+
+    .color {
+      display: block;
+      cursor: pointer;
+      background-color: var(--color);
+      align-self: center;
+      width: 2em;
+      height: 2em;
+      border-radius: 45%;
+      margin: 0.5em;
+
+      transition-property: transform;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      input[type="color"] {
+        display: none;
+      }
     }
   }
 </style>

@@ -8,8 +8,5 @@ export type MovieAd = {
   date: string;
   time: string;
   duration: number;
-  ads: (Ad & {
-    suffix?: string;
-    color?: string;
-  })[];
+  ads: Ad[];
 };

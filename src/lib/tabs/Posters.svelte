@@ -1,9 +1,14 @@
 <script>
   import { datas } from "@stores";
   import { v4 } from "uuid";
+  import { slide } from "svelte/transition";
   import Input from "../components/Input.svelte";
   import FilmTitle from "../components/FilmTitle.svelte";
 
+  /**
+   * @type {HTMLInputElement}
+   */
+  let input;
   let locations = ["INT HALL", "INT COUL"];
   let formats = ["120x160", "PLV CLASSIQUE", "PLV SPECIALE"];
 
@@ -22,6 +27,8 @@
       },
     ];
     poster.title = "";
+    input.scrollIntoView({ behavior: "smooth" });
+    input.focus();
   };
 
   const remove = (poster) => {
@@ -35,7 +42,7 @@
 
 <ul>
   {#each $datas.posters as p, i (p._id)}
-    <li>
+    <li transition:slide|local>
       <FilmTitle bind:value={p.title} />
       <Input
         bind:value={p.location}
@@ -56,7 +63,7 @@
     </li>
   {/each}
   <form on:submit|preventDefault={add}>
-    <FilmTitle bind:value={poster.title} noBlur />
+    <FilmTitle bind:value={poster.title} bind:input noBlur />
     <Input
       bind:value={poster.location}
       type="search"
@@ -80,7 +87,6 @@
   ul {
     display: flex;
     flex-direction: column;
-    gap: 1em;
 
     padding-bottom: 25vh;
   }
@@ -88,6 +94,7 @@
   form,
   li {
     display: flex;
+    margin: 1em 0;
     gap: 1em;
 
     & > :global(*) {

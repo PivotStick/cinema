@@ -1,6 +1,7 @@
 <script>
   import { datas } from "@stores";
   import { createEventDispatcher } from "svelte";
+  import { v4 } from "uuid";
   import SearchOrAdd from "./SearchOrAdd.svelte";
 
   const dispatch = createEventDispatcher();
@@ -9,6 +10,7 @@
    * @type {HTMLInputElement}
    */
   let input;
+
   let value = "";
   let index;
   let selected = 0;
@@ -22,10 +24,18 @@
     ).test(`${t.name}`.replace(/['"]/g, ""))
   );
 
+  const submit = () => {
+    dispatch("submit", filtered[selected]);
+    value = "";
+    input.focus();
+    input.scrollIntoView({ behavior: "smooth" });
+    selected = 0;
+  };
+
   /**
    * @param {KeyboardEvent} e
    */
-  const enter = (e) => {
+  const keydown = (e) => {
     switch (e.key) {
       case "ArrowUp":
         selected--;
@@ -36,11 +46,19 @@
         break;
 
       case "Enter":
-        dispatch("submit", filtered[selected]);
-        value = "";
-        input.focus();
-        input.scrollIntoView({ behavior: "smooth" });
-        selected = 0;
+        console.log(e.shiftKey);
+        submit();
+        break;
+
+      case "Tab":
+        e.preventDefault();
+        const v = filtered[selected];
+        if (v?.name) value = v.name;
+        else {
+          const title = { _id: v4(), name: value, type: "PUB" };
+          $datas.dico.titles = [...$datas.dico.titles, title];
+        }
+
         break;
     }
   };
@@ -56,12 +74,13 @@
 </script>
 
 <label class="container">
-  <input bind:this={input} type="text" bind:value on:keydown={enter} />
+  <input bind:this={input} type="text" bind:value on:keydown={keydown} />
   {#if index >= 0}
     <input
       type="text"
       bind:value={$datas.dico.titles[index].type}
-      on:keydown={enter}
+      on:keydown={keydown}
+      autofocus
     />
   {:else}
     <input type="text" value="???" disabled />

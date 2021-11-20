@@ -11,7 +11,7 @@
   export let search: string[] = null;
   export let nofilter = false;
 
-  let input: HTMLInputElement;
+  export let input: HTMLInputElement = undefined;
   let focused = false;
   let selection = -1;
 
@@ -157,6 +157,7 @@
     text-overflow: ellipsis;
     width: max-content;
     max-width: 75%;
+    border-radius: 1em;
 
     transition-property: top;
   }

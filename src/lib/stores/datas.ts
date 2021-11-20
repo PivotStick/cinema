@@ -53,7 +53,8 @@ const initial = {
     titles: [] as Ad[],
   },
 
-  groups: [] as { suffix: string; color: string }[],
+  groups: [] as { _id: string; suffix: string; color: string }[],
+  activeGroup: undefined as string,
 
   posters: [] as Poster[],
   movieAds: [] as MovieAd[],

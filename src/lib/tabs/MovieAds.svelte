@@ -38,7 +38,7 @@
   const addAd = (index: number = $datas.movieAds.length - 1, ad) => {
     $datas.movieAds[index].ads = [
       ...$datas.movieAds[index].ads,
-      { _id: v4(), ...ad },
+      { ...ad, _id: v4() },
     ];
   };
 
@@ -106,8 +106,17 @@
       </div>
       {#if group.expanded}
         <ul class="ads">
-          {#each group.ads as ad, adIndex}
-            <li transition:slide|local>
+          {#each group.ads as ad, adIndex (ad._id)}
+            <li
+              style={ad.group
+                ? `background-color: ${
+                    $datas.groups.find((d) => d._id === ad.group).color
+                  }`
+                : ""}
+              class:start={!group.ads[adIndex - 1]?.group}
+              class:end={!group.ads[adIndex + 1]?.group}
+              transition:slide|local
+            >
               <p>{adIndex + 1}</p>
               <FilmTitle bind:value={ad.name} placeholder="Avant Séance" />
               <Input
@@ -122,32 +131,8 @@
               >
             </li>
           {/each}
-          <Ad on:submit={(e) => addAd(groupIndex, e.detail)} />
-          <!-- <form class="add" on:submit|preventDefault={() => addAd()}>
-            <FilmTitle bind:value={ad.name} noBlur />
-            <Input
-              bind:value={ad.type}
-              placeholder="Contenu"
-              type="search"
-              search={contents}
-              nofilter
-            />
-            <button type="submit">+</button>
-          </form> -->
-          <!-- <ul class="groups">
-            <li>
-              <FilmTitle bind:value={ad.name} noBlur />
-              <Input
-                bind:value={ad.type}
-                placeholder="Contenu"
-                type="search"
-                search={contents}
-                nofilter
-              />
-            </li>
-            <button>Créer un groupe</button>
-          </ul> -->
         </ul>
+        <Ad on:submit={(e) => addAd(groupIndex, e.detail)} />
       {/if}
     </li>
   {/each}
@@ -201,12 +186,16 @@
 
   .ads {
     margin-top: 3em;
-    gap: 1em;
+    margin-bottom: 1em;
 
     li {
       display: flex;
       align-items: center;
+      padding: 1em 1.5em;
       gap: 1em;
+      border-radius: 1em;
+
+      transition-property: border-radius;
 
       & > :global(*:nth-child(2)) {
         flex: 1;
@@ -217,6 +206,16 @@
         font-size: 2em;
         transform: translateY(10%);
         width: 2ch;
+      }
+
+      &:not(.start) {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+
+      &:not(.end) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
     }
   }
