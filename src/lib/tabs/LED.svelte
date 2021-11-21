@@ -18,7 +18,10 @@
         <span
           class:visible={led.visible}
           on:click={() => {
-            led.visible = !led.visible;
+            $datas.leds = $datas.leds.map((_) => ({
+              ..._,
+              visible: _ === led && !led.visible,
+            }));
           }}>⌃</span
         >
       </div>
