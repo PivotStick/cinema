@@ -1,6 +1,7 @@
 <script>
   import { datas, initialLeds } from "@stores";
   import { slide } from "svelte/transition";
+  import Ad from "../components/Ad.svelte";
   import FilmTitle from "../components/FilmTitle.svelte";
   import Input from "../components/Input.svelte";
 
@@ -54,12 +55,11 @@
             {/each}
             {#if !led.max || led.films.length < led.max}
               <li>
-                <button
-                  class="add-film"
-                  on:click={() => {
-                    led.films = [...led.films, ""];
-                  }}>Ajouter un film</button
-                >
+                <Ad
+                  on:submit={(e) => {
+                    led.films = [...led.films, e.detail.name];
+                  }}
+                />
               </li>
             {/if}
           </ul>
@@ -127,10 +127,6 @@
 
   p {
     margin-bottom: 1em;
-  }
-
-  .add-film {
-    width: 100%;
   }
 
   .films {

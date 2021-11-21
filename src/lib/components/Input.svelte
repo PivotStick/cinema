@@ -62,6 +62,7 @@
     on:focus={() => (focused = true)}
     on:blur={() => (focused = false)}
     on:keydown={handleKeyDown}
+    on:keydown
   />
   {#if search && focused}
     <ul in:scale|local>
@@ -93,7 +94,7 @@
     border-radius: 1.5em;
     margin-top: 0.5em;
     font-weight: 700;
-    color: #aaa;
+    color: rgba(black, 0.35);
 
     transition-property: color;
 

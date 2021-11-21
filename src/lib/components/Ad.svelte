@@ -1,19 +1,19 @@
-<script>
+<script lang="ts">
+  import type { Ad } from "src/@types/Ad";
   import { datas } from "@stores";
   import { createEventDispatcher } from "svelte";
   import { v4 } from "uuid";
   import SearchOrAdd from "./SearchOrAdd.svelte";
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher<{ submit: Ad }>();
 
-  /**
-   * @type {HTMLInputElement}
-   */
-  let input;
+  let input: HTMLInputElement;
 
   let value = "";
   let index;
   let selected = 0;
+
+  const upper = (e) => (e.target.value = e.target.value.toUpperCase());
 
   $: index = $datas.dico.titles.findIndex((t) => t.name === value);
 
@@ -46,7 +46,6 @@
         break;
 
       case "Enter":
-        console.log(e.shiftKey);
         submit();
         break;
 
@@ -78,6 +77,7 @@
   {#if index >= 0}
     <input
       type="text"
+      on:input={upper}
       bind:value={$datas.dico.titles[index].type}
       on:keydown={keydown}
       autofocus
@@ -95,7 +95,12 @@
         }}
       >
         <span>{title.name}</span>
-        <span>{title.type}</span>
+        <span>
+          {title.type}
+          {#if title.group}
+            | GROUPE
+          {/if}
+        </span>
       </li>
     {:else}
       <li style="justify-content: center;">

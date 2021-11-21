@@ -1,14 +1,16 @@
 <script>
   import { datas } from "@stores";
   import { scale } from "svelte/transition";
+  import { flip } from "svelte/animate";
   import { v4 } from "uuid";
   import Dico from "../components/Dico.svelte";
-  import Ad from "../components/Ad.svelte";
   import Input from "../components/Input.svelte";
+  import Modal from "../components/Modal.svelte";
 
   let query = "";
   let type = "PUB";
   let limit = 50;
+  let editingGroup = false;
 
   const add = () => {
     $datas.dico.titles = [
@@ -54,6 +56,7 @@
   type="search"
   placeholder="Rechercher ou Ajouter..."
   bind:value={query}
+  on:keydown={(e) => e.key === "Enter" && add()}
 />
 
 {#if !results.length && query}
@@ -65,6 +68,52 @@
 <ul>
   {#each results as title (title._id)}
     <li>
+      <div class="group">
+        {#if title.group}
+          <div
+            class="toggle"
+            on:mousedown={(e) => {
+              e.preventDefault();
+              title.group = undefined;
+            }}
+          >
+            ✖
+          </div>
+          <input
+            type="text"
+            on:input={upper}
+            bind:value={title.group.suffix}
+            placeholder="Suffix"
+            name="suffix"
+          />
+          <input
+            type="text"
+            on:input={upper}
+            bind:value={title.group.start}
+            placeholder="Nom début"
+          />
+          <input
+            type="text"
+            on:input={upper}
+            bind:value={title.group.end}
+            placeholder="Nom fin"
+          />
+        {:else}
+          <div
+            class="toggle"
+            on:mousedown={(e) => {
+              e.preventDefault();
+              title.group = {
+                start: `DEBUT ${title.name}`,
+                end: `FIN ${title.name}`,
+                suffix: "PUB",
+              };
+            }}
+          >
+            +
+          </div>
+        {/if}
+      </div>
       <input
         type="text"
         on:input={upper}
@@ -72,6 +121,7 @@
       />
       <input
         type="text"
+        class="type"
         on:input={upper}
         bind:value={$datas.dico.titles[$datas.dico.titles.indexOf(title)].type}
       />
@@ -122,7 +172,7 @@
       color: rgb(var(--primary));
 
       .group {
-        display: flex;
+        display: block;
       }
     }
 
@@ -135,8 +185,9 @@
       color: inherit;
       outline: none;
 
-      &:last-of-type {
-        width: 25%;
+      &.type {
+        width: 50%;
+        text-align: end;
       }
     }
 
@@ -152,10 +203,13 @@
     display: none;
 
     right: 1em;
+    left: 1em;
     bottom: 100%;
     background-color: white;
     border: 1px solid currentColor;
     border-radius: 0.5em 0.5em 0 0;
+
+    animation: slide-in 600ms cubic-bezier(0, 0.5, 0, 1);
 
     .toggle {
       cursor: pointer;
@@ -172,28 +226,20 @@
     }
 
     & > input {
-      flex: 1;
+      text-align: center;
+      width: 100%;
+    }
+  }
+
+  @keyframes slide-in {
+    from {
+      overflow: hidden;
+      max-height: 0;
     }
 
-    .color {
-      display: block;
-      cursor: pointer;
-      background-color: var(--color);
-      align-self: center;
-      width: 2em;
-      height: 2em;
-      border-radius: 45%;
-      margin: 0.5em;
-
-      transition-property: transform;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-
-      input[type="color"] {
-        display: none;
-      }
+    to {
+      overflow: hidden;
+      max-height: 12.5em;
     }
   }
 </style>

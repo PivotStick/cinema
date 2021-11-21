@@ -23,8 +23,24 @@ export class MovieAds extends Sheet {
   }
 
   build($datas: Datas) {
-    const movieAds = $datas.movieAds.flatMap((group) =>
-      group.ads.map((ad, i) => [
+    const movieAds = $datas.movieAds.flatMap((group) => {
+      const flatten = group.ads.reduce((a, c) => {
+        if (c.group) {
+          a.push(
+            { name: c.start, type: c.type },
+            ...c.group.map(({ ...g }) => {
+              if (g.name !== c.suffix) g.name += ` ${c.suffix}`;
+
+              return g;
+            }),
+            { name: c.end, type: c.type }
+          );
+        } else a.push(c);
+
+        return a;
+      }, []);
+
+      return flatten.map((ad, i) => [
         $datas.week,
         $datas.code,
         $datas.city,
@@ -39,8 +55,8 @@ export class MovieAds extends Sheet {
         group.duration,
         group.date.split("-").reverse().join("/"),
         group.time.replace(":", "H"),
-      ])
-    );
+      ]);
+    });
     this.rows.push(...movieAds);
   }
 }

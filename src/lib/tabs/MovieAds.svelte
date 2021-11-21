@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type { MovieAd } from "src/@types/MovieAd";
+  import type { MovieAd as TMovieAd } from "src/@types/MovieAd";
   import { slide } from "svelte/transition";
   import { v4 } from "uuid";
   import { datas } from "@stores";
   import FilmTitle from "../components/FilmTitle.svelte";
   import Input from "../components/Input.svelte";
   import Ad from "../components/Ad.svelte";
+  import MovieAd from "../components/MovieAd.svelte";
 
   const dimensions = ["2D", "3D"];
-  const contents = ["PUB", "JINGLE", "FA", "FA PUB", "PUB NOIR", "FA NOIR"];
 
   const add = () => {
     const last = $datas.movieAds[$datas.movieAds.length - 1];
@@ -31,32 +31,45 @@
     ];
   };
 
-  const remove = (movieAd: MovieAd) => {
+  const remove = (movieAd: TMovieAd) => {
     $datas.movieAds = $datas.movieAds.filter((m) => m !== movieAd);
   };
 
   const addAd = (index: number = $datas.movieAds.length - 1, ad) => {
-    $datas.movieAds[index].ads = [
-      ...$datas.movieAds[index].ads,
-      { ...ad, _id: v4() },
-    ];
-  };
+    if ($datas.activeGroup?._id === ad._id) {
+      $datas.activeGroup = undefined;
+      return;
+    }
 
-  const removeAd = (index: number, ad: MovieAd["ads"][number]) => {
-    $datas.movieAds[index].ads = $datas.movieAds[index].ads.filter(
-      (a) => a !== ad
-    );
+    if ($datas.activeGroup) {
+      $datas.activeGroup.group = [...$datas.activeGroup.group, ad];
+      $datas.movieAds[index].ads = $datas.movieAds[index].ads;
+      return;
+    }
+
+    if (ad.group) {
+      $datas.activeGroup = { ...ad, ...ad.group };
+      $datas.activeGroup.group = [];
+      $datas.movieAds[index].ads = [
+        ...$datas.movieAds[index].ads,
+        $datas.activeGroup,
+      ];
+      return;
+    }
+
+    $datas.movieAds[index].ads = [...$datas.movieAds[index].ads, { ...ad }];
   };
 
   if (!$datas.movieAds.length) add();
 
   const reset = () => {
     $datas.movieAds = [];
+    $datas.activeGroup = undefined;
   };
 </script>
 
 <ul class="movies">
-  {#each $datas.movieAds as group, groupIndex}
+  {#each $datas.movieAds as group, groupIndex (groupIndex)}
     <li>
       <div>
         <Input
@@ -106,29 +119,40 @@
       </div>
       {#if group.expanded}
         <ul class="ads">
-          {#each group.ads as ad, adIndex (ad._id)}
-            <li
-              style={ad.group
-                ? `background-color: ${
-                    $datas.groups.find((d) => d._id === ad.group).color
-                  }`
-                : ""}
-              class:start={!group.ads[adIndex - 1]?.group}
-              class:end={!group.ads[adIndex + 1]?.group}
-              transition:slide|local
-            >
-              <p>{adIndex + 1}</p>
-              <FilmTitle bind:value={ad.name} placeholder="Avant Séance" />
-              <Input
-                bind:value={ad.type}
-                placeholder="Contenu"
-                type="search"
-                search={contents}
-                nofilter
-              />
-              <button tabindex="-1" on:click={() => removeAd(groupIndex, ad)}
-                >✖︎</button
-              >
+          {#each group.ads as ad, adIndex (adIndex)}
+            <li transition:slide|local>
+              {#if ad.group}
+                <ul class="group">
+                  <li class="meta">
+                    <span>{ad.start}</span>
+                    <span contenteditable="true" bind:textContent={ad.suffix} />
+                    <span>{ad.type}</span>
+                  </li>
+                  {#each ad.group as _ad, _i (_i)}
+                    <li in:slide|local>
+                      <MovieAd
+                        suffix={ad.suffix}
+                        bind:ad={_ad}
+                        on:delete={() => {
+                          ad.group = ad.group.filter((_, __) => __ !== _i);
+                        }}
+                      />
+                    </li>
+                  {/each}
+                  {#if $datas.activeGroup?._id !== ad._id}
+                    <li class="meta">
+                      {ad.end}
+                    </li>
+                  {/if}
+                </ul>
+              {:else}
+                <MovieAd
+                  bind:ad
+                  on:delete={() => {
+                    group.ads = group.ads.filter((_) => _ !== ad);
+                  }}
+                />
+              {/if}
             </li>
           {/each}
         </ul>
@@ -197,7 +221,7 @@
 
       transition-property: border-radius;
 
-      & > :global(*:nth-child(2)) {
+      & > :global(*:nth-child(1)) {
         flex: 1;
       }
 
@@ -227,6 +251,20 @@
 
     :global(:first-child) {
       flex: 1;
+    }
+  }
+
+  .group {
+    background-color: rgba(var(--primary), 0.15);
+    border-radius: 1em;
+    color: rgb(var(--primary));
+
+    .meta {
+      justify-content: space-between;
+
+      & > * {
+        flex: none;
+      }
     }
   }
 </style>

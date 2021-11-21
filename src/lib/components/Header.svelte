@@ -4,10 +4,7 @@
   import Input from "./Input.svelte";
 
   const generateAndDownload = () => {
-    const result = new ResultMaker(
-      `cinema - ${new Date().toLocaleDateString()}`,
-      $datas
-    );
+    const result = new ResultMaker(`MEGA CGR LATTES ${$datas.week}`, $datas);
 
     result.setSheet(new Posters());
     result.setSheet(new MovieAds());

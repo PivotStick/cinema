@@ -18,7 +18,7 @@
   <Tab name="Affiches"><Posters /></Tab>
   <Tab name="Films Annonce"><MovieAds /></Tab>
   <Tab name="LED"><LED /></Tab>
-  <Tab name="Remarques"><Remarks /></Tab>
+  <!-- <Tab name="Remarques"><Remarks /></Tab> -->
   <Tab name="Edition du Dico"><DicoEditor /></Tab>
 </Tabs>
 

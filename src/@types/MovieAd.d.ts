@@ -1,5 +1,10 @@
 import type { Ad } from "./Ad";
 
+type AdGroup = Omit<Ad, "group"> &
+  Ad["group"] & {
+    group?: Ad[];
+  };
+
 export type MovieAd = {
   room: number;
   expanded: boolean;
@@ -8,5 +13,5 @@ export type MovieAd = {
   date: string;
   time: string;
   duration: number;
-  ads: Ad[];
+  ads: AdGroup[];
 };
