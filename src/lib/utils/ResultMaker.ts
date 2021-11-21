@@ -16,6 +16,29 @@ export class ResultMaker {
     this.wb.Sheets[sheet.name] = sheet.format(
       XLSX.utils.aoa_to_sheet(sheet.rows)
     );
+
+    const border = { style: "thin", color: { auto: 1 } };
+    const r = /^[A-Z]+\d+$/;
+
+    Object.keys(this.wb.Sheets[sheet.name]).forEach((ref) => {
+      if (!r.test(ref)) return;
+      const cell = this.wb.Sheets[sheet.name][ref];
+      cell.t = `<t>${cell.v}</t>`;
+      cell.s = {
+        font: {
+          name: "Arial",
+        },
+        alignment: {
+          vertical: "center",
+        },
+        border: {
+          top: border,
+          bottom: border,
+          left: border,
+          right: border,
+        },
+      };
+    });
   }
 
   s2ab(s: string) {

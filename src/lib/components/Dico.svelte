@@ -13,12 +13,11 @@
 
     const name = result.SheetNames[0];
     const sheet = result.Sheets[name];
-    const titles = Object.keys(sheet)
-      .filter((c) => c.startsWith("A"))
-      .reduce((a, key) => {
-        a.push(sheet[key].v);
-        return a;
-      }, []);
+    const titles = Object.keys(sheet).reduce((a, key) => {
+      if (!key.startsWith("A")) return a;
+      a.push(sheet[key].v);
+      return a;
+    }, []);
 
     $datas.dico.titles = titles
       .slice(1)

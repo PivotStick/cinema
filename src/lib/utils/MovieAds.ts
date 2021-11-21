@@ -40,22 +40,24 @@ export class MovieAds extends Sheet {
         return a;
       }, []);
 
-      return flatten.map((ad, i) => [
-        $datas.week,
-        $datas.code,
-        $datas.city,
-        $datas.circuit,
-        $datas.name,
-        group.room,
-        group.film,
-        group.dimension,
-        ad.name,
-        ad.type,
-        i + 1,
-        group.duration,
-        group.date.split("-").reverse().join("/"),
-        group.time.replace(":", "H"),
-      ]);
+      return flatten.map((ad, i) =>
+        [
+          $datas.week,
+          $datas.code,
+          $datas.city,
+          $datas.circuit,
+          $datas.name,
+          group.room,
+          group.film,
+          group.dimension,
+          ad.name,
+          ad.type,
+          i + 1,
+          group.duration,
+          group.date.split("-").reverse().join("/"),
+          group.time.replace(":", "H"),
+        ].map((v, i) => this.count(v, i))
+      );
     });
     this.rows.push(...movieAds);
   }
