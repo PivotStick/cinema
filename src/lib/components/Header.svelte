@@ -5,7 +5,7 @@
 
   const generateAndDownload = () => {
     const result = new ResultMaker(
-      `${$datas.city} SEMAINE ${$datas.week}`,
+      `${$datas.name} SEMAINE ${$datas.week}`,
       $datas
     );
 

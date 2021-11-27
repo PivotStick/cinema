@@ -29,7 +29,7 @@ export class MovieAds extends Sheet {
           a.push(
             { name: c.start, type: c.type },
             ...c.group.map(({ ...g }) => {
-              if (g.name !== c.suffix) g.name += ` ${c.suffix}`;
+              if (g.type !== c.suffix) g.type += ` ${c.suffix}`;
 
               return g;
             }),
