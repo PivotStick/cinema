@@ -7,6 +7,12 @@
 
   const reader = new FileReader();
   reader.onloadend = () => {
+    if (files[0].type === "application/json") {
+      // @ts-ignore
+      $datas.dico = JSON.parse(reader.result);
+      return;
+    }
+
     const result = XLSX.read(reader.result, {
       type: "binary",
     });
@@ -25,7 +31,9 @@
   };
 
   $: {
-    if (files?.[0]) reader.readAsBinaryString(files[0]);
+    if (files?.[0]) {
+      reader.readAsBinaryString(files[0]);
+    }
   }
 </script>
 

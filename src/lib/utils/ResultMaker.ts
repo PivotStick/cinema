@@ -1,6 +1,7 @@
 import type { Datas } from "@stores";
 import type { Sheet } from "./Sheet";
 import XLSX, { WorkBook } from "xlsx";
+import { downloadFile } from "../functions/downloadFile";
 
 export class ResultMaker {
   wb: WorkBook;
@@ -54,14 +55,6 @@ export class ResultMaker {
       type: "application/octet-stream",
     });
 
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = this.filename + ".xlsx";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadFile(blob, this.filename + ".xlsx");
   }
 }

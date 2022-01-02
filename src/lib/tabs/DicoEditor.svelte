@@ -6,6 +6,7 @@
   import Dico from "../components/Dico.svelte";
   import Input from "../components/Input.svelte";
   import Modal from "../components/Modal.svelte";
+  import { downloadFile } from "../functions/downloadFile";
 
   let query = "";
   let type = "PUB";
@@ -36,6 +37,13 @@
     if (index >= 0) $datas.dico.titles[index].group = value;
   };
 
+  const download = () => {
+    const blob = new Blob([JSON.stringify($datas.dico)], {
+      type: "application/json",
+    });
+    downloadFile(blob, "dico.json");
+  };
+
   $: results = $datas.dico.titles
     .filter((title) => new RegExp(query, "gi").test(title.name))
     .slice(0, limit);
@@ -43,6 +51,7 @@
   $: query = query.toUpperCase();
 </script>
 
+<button class="download" on:click={download}>Télécharger le dico</button>
 <div class="dico">
   <Dico />
 </div>
@@ -229,6 +238,11 @@
       text-align: center;
       width: 100%;
     }
+  }
+
+  .download {
+    width: 100%;
+    margin-bottom: 1em;
   }
 
   @keyframes slide-in {
